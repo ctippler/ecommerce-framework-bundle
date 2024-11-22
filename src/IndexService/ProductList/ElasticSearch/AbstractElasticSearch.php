@@ -20,12 +20,13 @@ use Elastic\Elasticsearch\Client;
 use Pimcore\Bundle\EcommerceFrameworkBundle\Exception\InvalidConfigException;
 use Pimcore\Bundle\EcommerceFrameworkBundle\Factory;
 use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Config\ElasticSearch;
-use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Config\ElasticSearchConfigInterface;
+use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Config\SearchConfigInterface;
 use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\ProductList\ProductListInterface;
+use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\ProductList\TenantConfigInterface;
 use Pimcore\Bundle\EcommerceFrameworkBundle\Model\AbstractCategory;
 use Pimcore\Bundle\EcommerceFrameworkBundle\Model\IndexableInterface;
 
-abstract class AbstractElasticSearch implements ProductListInterface
+abstract class AbstractElasticSearch implements ProductListInterface, TenantConfigInterface
 {
     const LIMIT_UNLIMITED = -1;
 
@@ -52,7 +53,7 @@ abstract class AbstractElasticSearch implements ProductListInterface
 
     protected string $tenantName;
 
-    protected ElasticSearchConfigInterface $tenantConfig;
+    protected SearchConfigInterface $tenantConfig;
 
     protected ?int $totalCount = null;
 
@@ -115,12 +116,8 @@ abstract class AbstractElasticSearch implements ProductListInterface
         return $this;
     }
 
-    public function __construct(ElasticSearchConfigInterface $tenantConfig)
+    public function __construct(SearchConfigInterface $tenantConfig)
     {
-        trigger_error(
-            'ElasticSearchConfigInterface is deprecated. Use SearchConfigInterface instead.',
-            E_USER_DEPRECATED
-        );
         $this->tenantName = $tenantConfig->getTenantName();
         $this->tenantConfig = $tenantConfig;
     }
@@ -1089,7 +1086,7 @@ abstract class AbstractElasticSearch implements ProductListInterface
         return $data;
     }
 
-    public function getTenantConfig(): ElasticSearchConfigInterface
+    public function getTenantConfig(): SearchConfigInterface
     {
         return $this->tenantConfig;
     }

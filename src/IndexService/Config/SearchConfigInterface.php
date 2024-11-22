@@ -17,24 +17,16 @@ declare(strict_types=1);
 namespace Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Config;
 
 use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\SynonymProvider\SynonymProviderInterface;
-use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Worker\WorkerInterface;
 
 /**
- * Interface for IndexService Tenant Configurations using elastic search as index
+ * Interface for IndexService Tenant Configurations using a search server e.g. elastic or open search as index
  */
 interface SearchConfigInterface extends ConfigInterface
 {
     /**
      * returns condition for current subtenant
-     *
      */
     public function getSubTenantCondition(): array;
-
-    /**
-     * creates and returns tenant worker suitable for this tenant configuration
-     *
-     */
-    public function getTenantWorker(): WorkerInterface;
 
     /**
      * Get an associative array of configured synonym providers.
@@ -58,9 +50,6 @@ interface SearchConfigInterface extends ConfigInterface
     /**
      * returns short field name based on full field name
      * also considers subfield names like name.analyzed etc.
-     *
-     *
-     * @return false|int|string
      */
     public function getReverseMappedFieldName(string $fullFieldName): bool|int|string;
 }

@@ -18,8 +18,7 @@ namespace Pimcore\Bundle\EcommerceFrameworkBundle\Command\IndexService;
 
 use Exception;
 use Pimcore\Bundle\EcommerceFrameworkBundle\Factory;
-use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Worker\ElasticSearch\AbstractElasticSearch;
-use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Worker\OpenSearch\AbstractOpenSearch;
+use Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Worker\IndexRefreshInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,9 +65,9 @@ class IndexSyncCommand extends AbstractIndexServiceCommand
         $bar = new ProgressBar($output, count($tenantList));
 
         foreach ($tenantList as $tenantName) {
-            $elasticWorker = $indexService->getTenantWorker($tenantName); //e.g., 'AT_de_elastic'
+            $tenantWorker = $indexService->getTenantWorker($tenantName); //e.g., 'AT_de_elastic'
 
-            if (!$elasticWorker instanceof AbstractElasticSearch && !$elasticWorker instanceof AbstractOpenSearch) {
+            if (!$tenantWorker instanceof IndexRefreshInterface) {
                 $output->writeln("<info>Skipping tenant \"{$tenantName}\" as it's not a valid search index tenant.</info>");
 
                 continue;
@@ -78,8 +77,8 @@ class IndexSyncCommand extends AbstractIndexServiceCommand
 
             try {
                 match ($mode) {
-                    'reindex' => $elasticWorker->startReindexMode(),
-                    'update-synonyms' => $elasticWorker->updateSynonyms(),
+                    'reindex' => $tenantWorker->startReindexMode(),
+                    'update-synonyms' => $tenantWorker->updateSynonyms(),
                     default => null,
                 };
             } catch (Exception $e) {

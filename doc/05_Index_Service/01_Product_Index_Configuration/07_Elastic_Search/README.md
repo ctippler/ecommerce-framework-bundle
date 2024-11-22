@@ -27,7 +27,7 @@ To manually start a reindex, following command can be used: `bin/console ecommer
 
 :::caution
 
-The existing command `bin/console ecommerce:indexservice:search-elasticsearch-sync reindex` is deprecated and will be removed in 2.0.0.
+The command `bin/console ecommerce:indexservice:search-elasticsearch-sync reindex` was removed in 2.0.0.
 
 :::
 

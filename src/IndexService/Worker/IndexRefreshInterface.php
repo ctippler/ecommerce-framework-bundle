@@ -14,11 +14,15 @@ declare(strict_types=1);
  *  @license    http://www.pimcore.org/license     GPLv3 and PCL
  */
 
-namespace Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Config;
+namespace Pimcore\Bundle\EcommerceFrameworkBundle\IndexService\Worker;
 
-/**
- * @deprecated This interface will be removed in version 2.0.0 Use SearchConfigInterface instead.
- */
-interface ElasticSearchConfigInterface extends SearchConfigInterface
+interface IndexRefreshInterface
 {
+    public function startReindexMode(): void;
+
+    public function updateSynonyms(
+        string $indexNameOverride = '',
+        bool $skipComparison = false,
+        bool $skipLocking = true
+    ): void;
 }
